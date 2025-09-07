@@ -2,7 +2,7 @@ from pathlib import Path
 from datetime import datetime
 
 
-class MetadataFile:
+class FileMetadata:
 
     def __init__(self, path_file):
         self.path_file = Path(path_file)
@@ -40,7 +40,7 @@ class MetadataFile:
 
 
 if __name__ == "__main__":
-    metadata = MetadataFile("C:\\python_data\\podcasts\\download (1).wav")
+    metadata = FileMetadata("C:\\python_data\\podcasts\\download (1).wav")
     print(metadata.size())
     print(metadata.creation_date())
     print(metadata.modified_date())

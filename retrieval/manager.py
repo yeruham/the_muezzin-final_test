@@ -1,6 +1,7 @@
 from pathlib import Path
-from get_metadata import MetadataFile
-from kafka.producer import Producer
+from get_metadata import FileMetadata
+from kafka_tools.producer import Producer
+
 
 class Manager:
 
@@ -12,7 +13,7 @@ class Manager:
 
     @staticmethod
     def _get_metadata(path_file):
-        metadata_file = MetadataFile(path_file)
+        metadata_file = FileMetadata(path_file)
         metadata = {"path": metadata_file.path_file,
                     "name": metadata_file.name(),
                     "size": metadata_file.size(),
@@ -41,10 +42,9 @@ class Manager:
         producer = self.get_kafka_producer()
         for path in subfiles_paths:
             metadata_of_file = self._get_metadata(path)
+            print(f"send {metadata_of_file["name"]}")
             producer.publish_messages(self.topic, metadata_of_file)
 
 
 
-if __name__ == "__main__":
-    manager = Manager("C:\\python_data\\podcasts")
-    manager.get_subfiles()
+

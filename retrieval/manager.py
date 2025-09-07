@@ -15,8 +15,8 @@ class Manager:
 
     def _get_metadata(self, path_file):
         """ internal method which accepts path of file and return dict with all his metadata """
-        # use with FileMetadata class to access easily to metadata
         try:
+            # use with FileMetadata class to access easily to metadata
             metadata_file = FileMetadata(path_file)
             metadata = {"path": metadata_file.path_file,
                         "name": metadata_file.name(),
@@ -27,6 +27,7 @@ class Manager:
             return metadata
         except Exception as e:
             print(f"Error while trying to access metadata of {path_file}: {e}")
+            return None
 
 
     def get_subfiles(self):
@@ -39,7 +40,7 @@ class Manager:
 
 
     def get_kafka_producer(self):
-
+        """ return kafka-producer by self.kafka_server_uri """
         producer = Producer(self.kafka_server_uri)
         producer.create_producer()
         return producer
@@ -52,8 +53,9 @@ class Manager:
         producer = self.get_kafka_producer()
         for path in subfiles_paths:
             metadata_of_file = self._get_metadata(path)
-            print(f"send {metadata_of_file["name"]}")
-            producer.publish_messages(self.topic, metadata_of_file)
+            if metadata_of_file:
+                print(f"send {metadata_of_file["name"]}")
+                producer.publish_messages(self.topic, metadata_of_file)
         # flush the messages and close the producer
         producer.flush_messages()
         producer.close_producer()

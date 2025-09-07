@@ -5,6 +5,7 @@ from datetime import datetime
 class FileMetadata:
 
     def __init__(self, path_file):
+        """ class that makes the metadata of file accessible - init with path of single file"""
         self.path_file = Path(path_file)
         if not self.path_file.exists():
             raise FileNotFoundError(f"the path file: {path_file} does not exists")
@@ -36,12 +37,3 @@ class FileMetadata:
         last_access_date = self.path_file.stat().st_mtime
         new_format_last_access_date = datetime.fromtimestamp(last_access_date)
         return new_format_last_access_date
-
-
-
-if __name__ == "__main__":
-    metadata = FileMetadata("C:\\python_data\\podcasts\\download (1).wav")
-    print(metadata.size())
-    print(metadata.creation_date())
-    print(metadata.modified_date())
-    print(metadata.last_access_date())

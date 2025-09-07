@@ -1,16 +1,15 @@
 from pymongo import MongoClient
+import gridfs
 
 
 class DALMongo:
 
-    def __init__(self, prefix, host, database, collection, user= None, password= None):
+    def __init__(self, prefix, host, user= None, password= None):
         self.prefix = prefix
         self.host = host
-        self.database = database
-        self.collection = collection
         self.user = user
         self.password = password
-        self.URI = self.get_URI()
+        self.URI = self.build_URI()
         self.client = None
 
 
@@ -32,6 +31,16 @@ class DALMongo:
             self.client = None
             print(f"Error: {e}")
             return False
+
+
+    def insert_file(self, database, path, **kwargs):
+        if self.client:
+            db = self.client[database]
+            grid_db = gridfs.GridFS(db)
+            with open(path, "br") as f:
+                grid_db.put(f, **kwargs)
+
+
 
 
     def close_connection(self):

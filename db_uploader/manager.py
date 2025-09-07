@@ -15,23 +15,27 @@ class UploadManager:
         self.consumer = Consumer(server_uri, group, *topics)
 
 
-    def create_dal_mongodb(self, prefix, host, database, collection, user= None, password= None):
-        self.mongodb = DALMongo(prefix, host, database, collection, user, password)
+    def create_dal_mongodb(self, prefix, host, user= None, password= None):
+        self.mongodb = DALMongo(prefix, host, user, password)
 
 
     def create_dal_elastic(self, host_name, index_name, mappings = None):
         self.elastic = DALElastic(host_name, index_name, mappings)
 
 
-    def run_process(self):
+    def run_process(self, database):
         if isinstance(self.mongodb, DALMongo) and (isinstance(self.elastic, DALElastic) and isinstance(self.consumer, Consumer)):
             self.consumer.run_consumer_events()
             self.elastic.create_index()
             continue_run = True
+
             while continue_run:
                 message = self._get_message()
+                path = message.pop("path")
                 unique_id = self._create_unique_id(message)
                 self.elastic.post_document(unique_id, message)
+                self.mongodb.insert_file(database ,path, unique_id=unique_id)
+
 
 
 
@@ -46,5 +50,3 @@ class UploadManager:
         for k, v in metadata.items():
             id += str(v)
         return id
-
-

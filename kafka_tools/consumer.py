@@ -30,4 +30,4 @@ class Consumer:
                 print(f"offset:  {message.offset}")
                 print(f"topic:  {message.topic}")
 
-                yield message
+                yield message.value

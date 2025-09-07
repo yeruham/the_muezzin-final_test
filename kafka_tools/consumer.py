@@ -4,13 +4,13 @@ import json
 
 class Consumer:
 
-    def __init__(self, server_uri, *topics, group):
+    def __init__(self, server_uri, group, *topics):
         """ class which represents kafka-consumer - init with uri of kafka service,
             topics to listen to them, and the group to which he belongs.
             to create and run the consumer run the run_consumer_events method """
         self.server_uri = server_uri
-        self.topics = topics
         self.group = group
+        self.topics = topics
         self.consumer_events = None
 
 

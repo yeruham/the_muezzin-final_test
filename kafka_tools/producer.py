@@ -5,7 +5,7 @@ import json
 class Producer:
 
     def __init__(self, server_uri):
-        """ class which represents kafka-producer - init with uri of kafka service
+        """ class which represents kafka-producer - init with uri of kafka service.
             to create the producer run the create_producer method """
         self.server_uri = server_uri
         self.producer = None

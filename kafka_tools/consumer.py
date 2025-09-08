@@ -48,7 +48,7 @@ class Consumer:
                                              bootstrap_servers=[self.server_uri],
                                              consumer_timeout_ms=timeout)
         logger.info(f"consumer created - listen to kafka-server: {self.server_uri}, topics: {self.topics}"
-                    f"for {timeout} time ")
+                    f"for {timeout} seconds ")
         events = []
         for message in self.consumer_events:
             print(f"consumer get event - offset:  {message.offset}. topic:  {message.topic}")

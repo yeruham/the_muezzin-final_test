@@ -1,15 +1,20 @@
 import logging
 from elasticsearch import Elasticsearch
 from datetime import datetime
-import logger_config
+import os
+
+
+LOGGER_NAME = os.getenv("LOGGER_NAME", "logger-muezzin")
+LOGGER_ES_HOST = os.getenv("LOGGER_ES_HOST", "http://localhost:9200")
+LOGGER_ES_INDEX = os.getenv("LOGGER_ES_INDEX", "logging-muezzin")
 
 
 class Logger:
     _logger = None
 
     @classmethod
-    def get_logger(cls, name=logger_config.LOGGER_NAME, es_host=logger_config.LOGGER_ES_HOST,
-                   index=logger_config.LOGGER_ES_INDEX, level=logging.DEBUG):
+    def get_logger(cls, name=LOGGER_NAME, es_host=LOGGER_ES_HOST,
+                   index=LOGGER_ES_INDEX, level=logging.DEBUG):
         if cls._logger:
             return cls._logger
         logger = logging.getLogger(name)

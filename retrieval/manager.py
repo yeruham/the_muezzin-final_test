@@ -51,5 +51,5 @@ class Manager:
         # flush the messages and close the producer
         producer.flush_messages()
         producer.close_producer()
-        logger.info("retrieval process stopped")
+        logger.info("retrieval process ended")
         print("finish to send all data")

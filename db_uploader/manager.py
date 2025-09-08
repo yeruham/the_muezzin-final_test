@@ -24,15 +24,22 @@ class UploadManager:
 
 
     def run_process(self, database, time_consumer_limited):
+        """ run the process - a: consumer messages of metadata from kafka.
+         b: connected to elastic and sending to him the metadata.
+         c: connected to mongodb and sending to him the file itself"""
         if isinstance(self.mongodb, DALMongo) and (isinstance(self.elastic, DALElastic) and isinstance(self.consumer, Consumer)):
             events = self.consumer.run_consumer_limited(time_consumer_limited)
-            self.elastic.create_index()
-            self.mongodb.open_connection()
+            connected_to_elastic = self.elastic.is_connected()
+            connected_to_mongo_db = self.mongodb.open_connection()
+            if connected_to_elastic:
+                self.elastic.create_index()
             for message in events:
                 path = message.pop("path")
                 unique_id = self._create_unique_id(message["name"], message["creation_date"], message["size"])
-                self.elastic.post_document(unique_id, message)
-                self.mongodb.insert_file(database ,path, id=unique_id)
+                if connected_to_elastic:
+                    self.elastic.post_document(unique_id, message)
+                if connected_to_mongo_db:
+                    self.mongodb.insert_file(database ,path, id=unique_id)
             self.mongodb.close_connection()
         else:
             print(f"one of the objects is not the correct type. current self.mongodb is {type(self.mongodb)}."

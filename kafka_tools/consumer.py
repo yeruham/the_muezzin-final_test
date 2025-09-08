@@ -7,7 +7,8 @@ class Consumer:
     def __init__(self, server_uri, group, *topics):
         """ class which represents kafka-consumer - init with uri of kafka service,
             topics to listen to them, and the group to which he belongs.
-            to create and run the consumer run the run_consumer_events method """
+            to create and run the consumer run the run_consumer_events method and get_events method
+            or run run_consumer_limited for limit consumer-events """
         self.server_uri = server_uri
         self.group = group
         self.topics = topics

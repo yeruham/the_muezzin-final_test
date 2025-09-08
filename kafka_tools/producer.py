@@ -1,7 +1,9 @@
-from asyncio import timeout
-
 from kafka import KafkaProducer
 import json
+from logger.logger import Logger
+import logging
+logging.getLogger("kafka").setLevel(logging.WARNING)
+logger = Logger.get_logger()
 
 
 class Producer:
@@ -13,11 +15,13 @@ class Producer:
         self.producer = None
 
 
+
     def create_producer(self):
         """ create producer on the self.producer variable """
         if self.producer is None:
             self.producer = KafkaProducer(bootstrap_servers=[self.server_uri],
                                      value_serializer=lambda x: json.dumps(x, default=str).encode('utf-8'))
+            logger.info(f"producer created - kafka-server {self.server_uri}")
 
 
     def flush_messages(self):
@@ -37,4 +41,5 @@ class Producer:
         """ close the producer - the self.producer becomes to be None """
         if self.producer is not None:
             self.producer.close(timeout=10)
+            logger.info(f"producer stopped - kafka-server {self.server_uri}")
         self.producer = None

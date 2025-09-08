@@ -15,12 +15,14 @@ class Consumer:
 
 
     def run_consumer_events(self):
-        """ create consumer_events and start to listen to messages from kafka """
+        """ create consumer_events without time limit and start to listen to messages from kafka.
+            to get the events run get_events method that return one after one in yield """
         self.consumer_events = KafkaConsumer(*self.topics,
-                                 value_deserializer=lambda m: json.loads(m.decode('ascii')),
-                                 group_id=self.group,
-                                 bootstrap_servers=[self.server_uri])
+                                     value_deserializer=lambda m: json.loads(m.decode('utf-8')),
+                                     group_id=self.group,
+                                     bootstrap_servers=[self.server_uri])
         print("start to consume events")
+
 
 
     def get_events(self):
@@ -31,3 +33,19 @@ class Consumer:
                 print(f"topic:  {message.topic}")
 
                 yield message.value
+
+
+    def run_consumer_limited(self, timeout: int):
+        """ create consumer_events with time limit and immediately start to listen to messages from kafka.
+            and save the events in list. return list with messages """
+        self.consumer_events = KafkaConsumer(*self.topics,
+                                             value_deserializer=lambda m: json.loads(m.decode('utf-8')),
+                                             group_id=self.group,
+                                             bootstrap_servers=[self.server_uri],
+                                             consumer_timeout_ms=timeout)
+        events = []
+        for message in self.consumer_events:
+            print(f"offset:  {message.offset}")
+            print(f"topic:  {message.topic}")
+            events.append(message.value)
+        return events

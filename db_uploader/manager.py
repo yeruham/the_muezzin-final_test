@@ -17,8 +17,8 @@ class UploadManager:
         self.consumer = Consumer(server_uri, group, *topics)
 
 
-    def create_dal_mongodb(self, prefix, host, user= None, password= None):
-        self.mongodb = DALMongo(prefix, host, user, password)
+    def create_dal_mongodb(self, prefix, host, database, collection, user= None, password= None):
+        self.mongodb = DALMongo(prefix, host, database, collection, user, password)
 
 
     def create_dal_elastic(self, host_name, index_name, mappings = None):
@@ -42,7 +42,7 @@ class UploadManager:
                 if connected_to_elastic:
                     self.elastic.post_document(unique_id, message)
                 if connected_to_mongo_db:
-                    self.mongodb.insert_file(database ,path, id=unique_id)
+                    self.mongodb.insert_file(path, id=unique_id)
             self.mongodb.close_connection()
             logger.info(f"finish the process of upload files and their metadata. "
                         f"{len(events)} were accepted from kafka and sends to elastic and mongodb.")

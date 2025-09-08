@@ -6,9 +6,11 @@ logger = Logger.get_logger()
 
 class DALMongo:
 
-    def __init__(self, prefix, host, user= None, password= None):
+    def __init__(self, prefix, host, database, collection, user= None, password= None):
         self.prefix = prefix
         self.host = host
+        self.database = database
+        self.collection = collection
         self.user = user
         self.password = password
         self.URI = self.build_URI()
@@ -36,12 +38,21 @@ class DALMongo:
             return False
 
 
-    def insert_file(self, database, path, **kwargs):
+    def insert_file(self, path, **kwargs):
         if self.client:
-            db = self.client[database]
-            grid_db = gridfs.GridFS(db)
+            db = self.client[self.database]
+            grid_db = gridfs.GridFS(db, collection=self.collection)
             with open(path, "br") as f:
                 grid_db.put(f, **kwargs)
+
+
+    def get_file(self, id):
+        if self.client:
+            db = self.client[self.database]
+            fs = gridfs.GridFS(db)
+            for grid_out in fs.find({"id": id}):
+                data = grid_out.read()
+                return data
 
 
 
@@ -49,3 +60,12 @@ class DALMongo:
         if self.client:
             self.client.close()
             logger.info(f"connection to mongodb {self.URI} closed")
+
+
+# example
+if __name__ == "__main__":
+    dal_mongo = DALMongo("mongodb", "localhost", "muezzin", "podcast")
+    print(dal_mongo.open_connection())
+    data = dal_mongo.get_file("download (1).wav-1979-12-31 23:00:00-2396.81 KB-")
+    with open("C:\\python_data\\new_podcast\\new.wav", "bw") as f:
+        f.write(data)

@@ -12,13 +12,13 @@ and send all one to kafka.
 ### step 2 - db_uploader  
 
 service who is responsible for upload files and their metadata to dbs (mongodb and elastic)
-from kafka (use by kafka consumer)  
+from kafka (uses be kafka consumer)  
 
 - class **UploadManager** for run all process   
-uses in kafka-consumer to consume metadata of files  
+uses be kafka-consumer to get the metadata of files  
 creates unique id for all file by his metadata and  store it as follows:  
-uses in DAL-elastic and sending to him the metadata  
-uses in DAL-mongodb and sending to him the files themselves
+uses be DAL-elastic and sending to him the metadata  
+uses be DAL-mongodb and sending to him the files themselves
 
 
 ### DAL  

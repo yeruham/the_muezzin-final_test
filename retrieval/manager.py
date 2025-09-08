@@ -1,6 +1,8 @@
 from pathlib import Path
 from file_metadata import FileMetadata
 from kafka_tools.producer import Producer
+from logger.logger import Logger
+logger = Logger.get_logger()
 
 
 class Manager:
@@ -11,7 +13,6 @@ class Manager:
         self.path = Path(source_folder_path)
         self.kafka_server_uri = kafka_server_uri
         self.topic = topic
-
 
 
     def get_subfiles(self):
@@ -33,6 +34,7 @@ class Manager:
     def run_process(self):
         """ ron the process - first get all sub files from path and create kafka-producer.
          than get metadata and send him to kafka for all one of them """
+        logger.info("retrieval process start")
         subfiles_paths = self.get_subfiles()
         producer = self.get_kafka_producer()
         for path in subfiles_paths:
@@ -44,8 +46,10 @@ class Manager:
                 print(f"send metadata of file {path}")
                 producer.publish_messages(self.topic, metadata)
             except Exception as e:
-                print(f"Error while trying to access metadata of {path}: {e}")
+                logger.error(f"Error while trying to access metadata of {path}: {e}")
+        logger.info(f"finished sending to kafka topic {self.topic} {len(subfiles_paths)} messages")
         # flush the messages and close the producer
         producer.flush_messages()
         producer.close_producer()
+        logger.info("retrieval process stopped")
         print("finish to send all data")

@@ -1,5 +1,5 @@
 from pathlib import Path
-from get_metadata import FileMetadata
+from file_metadata import FileMetadata
 from kafka_tools.producer import Producer
 
 
@@ -12,22 +12,6 @@ class Manager:
         self.kafka_server_uri = kafka_server_uri
         self.topic = topic
 
-
-    def _get_metadata(self, path_file):
-        """ internal method which accepts path of file and return dict with all his metadata """
-        try:
-            # use with FileMetadata class to access easily to metadata
-            metadata_file = FileMetadata(path_file)
-            metadata = {"path": metadata_file.path_file,
-                        "name": metadata_file.name(),
-                        "size": metadata_file.size(),
-                        "creation_date": metadata_file.creation_date(),
-                        "modified_date": metadata_file.modified_date(),
-                        "last_access_date": metadata_file.last_access_date()}
-            return metadata
-        except Exception as e:
-            print(f"Error while trying to access metadata of {path_file}: {e}")
-            return None
 
 
     def get_subfiles(self):
@@ -52,10 +36,15 @@ class Manager:
         subfiles_paths = self.get_subfiles()
         producer = self.get_kafka_producer()
         for path in subfiles_paths:
-            metadata_of_file = self._get_metadata(path)
-            if metadata_of_file:
-                print(f"send {metadata_of_file["name"]}")
-                producer.publish_messages(self.topic, metadata_of_file)
+            try:
+                # use with FileMetadata class to access easily to metadata
+                file_metadata = FileMetadata(path)
+                metadata = file_metadata.full_metadata()
+                metadata.update({"path": path})
+                print(f"send metadata of file {path}")
+                producer.publish_messages(self.topic, metadata)
+            except Exception as e:
+                print(f"Error while trying to access metadata of {path}: {e}")
         # flush the messages and close the producer
         producer.flush_messages()
         producer.close_producer()

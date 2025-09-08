@@ -23,30 +23,32 @@ class UploadManager:
         self.elastic = DALElastic(host_name, index_name, mappings)
 
 
-    def run_process(self, database):
+    def run_process(self, database, time_consumer_limited):
+        """ run the process - a: consumer messages of metadata from kafka.
+         b: connected to elastic and sending to him the metadata.
+         c: connected to mongodb and sending to him the file itself"""
         if isinstance(self.mongodb, DALMongo) and (isinstance(self.elastic, DALElastic) and isinstance(self.consumer, Consumer)):
-            self.consumer.run_consumer_events()
-            self.elastic.create_index()
-            continue_run = True
-
-            while continue_run:
-                message = self._get_message()
+            events = self.consumer.run_consumer_limited(time_consumer_limited)
+            connected_to_elastic = self.elastic.is_connected()
+            connected_to_mongo_db = self.mongodb.open_connection()
+            if connected_to_elastic:
+                self.elastic.create_index()
+            for message in events:
                 path = message.pop("path")
-                unique_id = self._create_unique_id(message)
-                self.elastic.post_document(unique_id, message)
-                self.mongodb.insert_file(database ,path, unique_id=unique_id)
+                unique_id = self._create_unique_id(message["name"], message["creation_date"], message["size"])
+                if connected_to_elastic:
+                    self.elastic.post_document(unique_id, message)
+                if connected_to_mongo_db:
+                    self.mongodb.insert_file(database ,path, id=unique_id)
+            self.mongodb.close_connection()
+        else:
+            print(f"one of the objects is not the correct type. current self.mongodb is {type(self.mongodb)}."
+                  f"current self.elastic is {type(self.elastic)}. current self.consumer is {type(self.consumer)}.")
 
 
 
-
-    def _get_message(self):
-        print("waiting to message")
-        messages = self.consumer.get_events()
-        return next(messages)
-
-
-    def _create_unique_id(self, metadata: dict):
+    def _create_unique_id(self, *identifiers):
         id = ""
-        for k, v in metadata.items():
-            id += str(v)
+        for i in identifiers:
+            id += f"{i}-"
         return id

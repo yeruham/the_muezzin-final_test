@@ -1,3 +1,5 @@
+from asyncio import timeout
+
 from kafka import KafkaProducer
 import json
 
@@ -21,7 +23,7 @@ class Producer:
     def flush_messages(self):
         """ flush messages that were sent """
         if self.producer is not None:
-            self.producer.flush()
+            self.producer.flush(timeout=10)
 
 
     def publish_messages(self, topic: str, message: dict):

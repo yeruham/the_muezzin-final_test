@@ -37,3 +37,13 @@ class FileMetadata:
         last_access_date = self.path_file.stat().st_mtime
         new_format_last_access_date = datetime.fromtimestamp(last_access_date)
         return new_format_last_access_date
+
+
+    def full_metadata(self):
+        """ return dict with all file metadata """
+        metadata = {"name": self.name(),
+                    "size":self.size(),
+                    "creation_date": self.creation_date(),
+                    "modified_date": self.modified_date(),
+                    "last_access_date": self.last_access_date()}
+        return metadata

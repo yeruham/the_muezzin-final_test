@@ -1,5 +1,7 @@
 from pymongo import MongoClient
 import gridfs
+from logger.logger import Logger
+logger = Logger.get_logger()
 
 
 class DALMongo:
@@ -26,10 +28,11 @@ class DALMongo:
         try:
             self.client = MongoClient(self.URI)
             self.client.admin.command("ping")
+            logger.info(f"connected to mongodb {self.URI} - ready for operations")
             return True
         except Exception as e:
             self.client = None
-            print(f"Error: {e}")
+            logger.error(f"Error during try to connect to {self.URI} : {e}")
             return False
 
 
@@ -42,7 +45,7 @@ class DALMongo:
 
 
 
-
     def close_connection(self):
         if self.client:
             self.client.close()
+            logger.info(f"connection to mongodb {self.URI} closed")

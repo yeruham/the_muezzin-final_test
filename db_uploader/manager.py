@@ -1,6 +1,8 @@
 from kafka_tools.consumer import Consumer
 from DAL.mongodb import DALMongo
 from DAL.elastic_search import DALElastic
+from logger.logger import Logger
+logger = Logger.get_logger()
 
 
 class UploadManager:
@@ -28,6 +30,7 @@ class UploadManager:
          b: connected to elastic and sending to him the metadata.
          c: connected to mongodb and sending to him the file itself"""
         if isinstance(self.mongodb, DALMongo) and (isinstance(self.elastic, DALElastic) and isinstance(self.consumer, Consumer)):
+            logger.info("start the process of upload files and their metadata to elastic and mongodb")
             events = self.consumer.run_consumer_limited(time_consumer_limited)
             connected_to_elastic = self.elastic.is_connected()
             connected_to_mongo_db = self.mongodb.open_connection()
@@ -41,8 +44,10 @@ class UploadManager:
                 if connected_to_mongo_db:
                     self.mongodb.insert_file(database ,path, id=unique_id)
             self.mongodb.close_connection()
+            logger.info(f"finish the process of upload files and their metadata. "
+                        f"{len(events)} were accepted from kafka and sends to elastic and mongodb.")
         else:
-            print(f"one of the objects is not the correct type. current self.mongodb is {type(self.mongodb)}."
+            logger.error(f"one of the objects is not the correct type. current self.mongodb is {type(self.mongodb)}."
                   f"current self.elastic is {type(self.elastic)}. current self.consumer is {type(self.consumer)}.")
 
 

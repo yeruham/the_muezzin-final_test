@@ -69,9 +69,10 @@ class DALMongo:
         if self.client:
             db = self.client[self.database]
             fs = gridfs.GridFS(db, collection=self.collection)
-            grid_out =  fs.find_one({"id": file_id})
+            grid_out = fs.find_one({"id": file_id})
             data = grid_out.read()
-            with open(f"{destination_path}\\{new_file_name}", "bw") as f:
+            path = path.joinpath(new_file_name)
+            with open(path, "bw") as f:
                 f.write(data)
 
 
@@ -86,6 +87,7 @@ class DALMongo:
 
 # example
 if __name__ == "__main__":
-    dal_mongo = DALMongo("mongodb", "localhost", "muezzin", "fs")
-    print(dal_mongo.open_connection())
-    #data = dal_mongo.load_file("download (10).wav-1979-12-31 23:00:00-1326.18 KB-", "C:\\python_data\\new_podcast", "new10.wav")
+    dal_mongo = DALMongo("mongodb", "localhost", "muezzin", "podcast")
+    connected = dal_mongo.open_connection()
+    if connected:
+        dal_mongo.load_file("download (11).wav-1979-12-31 23:00:00-1779.93 KB-", "C:\\python_data\\new_podcast", "new10.wav")

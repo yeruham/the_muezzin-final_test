@@ -23,7 +23,7 @@ uses be DAL-mongodb and sending to him the files themselves
 
 ### DAL  
 
-folder with dal dbs - mongodb, elastic  (used in step2)  
+folder with dal dbs - mongodb, elastic  (used in step-2 and step-3)  
 
 - class **DALElastic** for connection and operations be elasticsearch  
 - class **DALMongo** for connection and operations be mongodb   
@@ -31,7 +31,7 @@ folder with dal dbs - mongodb, elastic  (used in step2)
 
 ### kafka_tools  
 
-folder with tools for kafka communication  (used in step1 and step2)   
+folder with tools for kafka communication  (used in step-1 and step-2)   
 
 - class **Producer** for produce messages to kafka
 - class **Consumer** for consume messages from kafka  
@@ -46,7 +46,7 @@ loads all file by his id from mongodb, transcriber him,
 and save the text back in elastic.
 
 i chose to build the transcript as a separate process.  
-because it is a separate process from uploading the file itself.  
+because it is a separate process from uploading the file itself and their metadata,
 and it will probably take a long time.  
 
 - file **speach_to_text** with method to convert STT  

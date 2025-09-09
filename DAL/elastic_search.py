@@ -28,6 +28,34 @@ class DALElastic:
                 logger.info(f"index {self.index} already exists")
 
 
-    def post_document(self, id, user):
-        result =  self.es.index(index=self.index, id=id, body=user)
+    def post_document(self, id, document):
+        result =  self.es.index(index=self.index, id=id, body=document)
         print(result)
+
+
+    def update_user(self, id, updated_details):
+        result = self.es.update(index=self.index, id=str(id), doc=updated_details)
+        print(result)
+
+
+    def get_only_id_of_all_documents(self):
+        query = {"size": 10000,
+                "query": {
+                    "match_all": {}
+                },
+                "_source": "false",
+                }
+        response = self.es.search(index=self.index, body=query)
+        print(response)
+        hits = response["hits"]["hits"]
+        data = []
+        for doc in hits:
+            data.append(doc["_id"])
+        return data
+
+
+if __name__ == "__main__":
+    dal_elastic = DALElastic("localhost", "muezzin")
+    if dal_elastic.is_connected():
+        ids = dal_elastic.get_only_id_of_all_documents()
+        print(ids)

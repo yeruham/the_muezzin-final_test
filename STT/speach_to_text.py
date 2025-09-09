@@ -15,7 +15,7 @@ def convert_audio_file_to_text(audio_path):
     r = sr.Recognizer()
     try:
         transcribed_text = r.recognize_sphinx(audio)
-        print(f"Sphinx thinks you said: {transcribed_text}")
+        print(f"the Sphinx transcription was successful. {audio_path}")
         return transcribed_text
     except sr.UnknownValueError:
         logger.error("Sphinx could not understand audio")

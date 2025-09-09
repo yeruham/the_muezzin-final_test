@@ -8,7 +8,7 @@ logger = Logger.get_logger()
 
 def convert_audio_file_to_text(audio_path):
     """ convert audio file to text. receives path of audio file and return the transcribed text.
-        using with recognize_sphinx. in case of Error return None """
+        using with **recognize_sphinx**. in case of Error return None """
     if not os.path.exists(audio_path):
         raise FileNotFoundError(f"No such file or directory: {audio_path}")
     audio = sr.AudioData.from_file(audio_path)
@@ -24,4 +24,4 @@ def convert_audio_file_to_text(audio_path):
 
 
 if __name__ == "__main__":
-    convert_audio_file_to_text("C:\\python_data\\podcasts\\download (6).wav")
+    convert_audio_file_to_text("C:\\python_data\\podcasts\\download (18).wav")

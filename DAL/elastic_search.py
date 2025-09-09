@@ -33,9 +33,25 @@ class DALElastic:
         print(result)
 
 
-    def update_user(self, id, updated_details):
+    def update_document(self, id, updated_details):
         result = self.es.update(index=self.index, id=str(id), doc=updated_details)
         print(result)
+
+
+    def get_documents(self):
+        query = {"size": 10000,
+                "query": {
+                    "match_all": {}
+        }}
+        response = self.es.search(index=self.index, body=query)
+        data = []
+        hits = response["hits"]["hits"]
+        for doc in hits:
+            info = doc["_source"]
+            info.update({"_id": doc["_id"]})
+            data.append(info)
+        return data
+
 
 
     def get_only_id_of_all_documents(self):

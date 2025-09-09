@@ -71,7 +71,7 @@ class Transcriber:
             self.mongodb.load_file(file_id, self.data_folder, temp_file_name)
             audio_path = self.data_folder.joinpath(temp_file_name)
             transcribed_text = convert_audio_file_to_text(str(audio_path))
-            self.elastic.update_user(file_id, {"transcribed_text": transcribed_text})
+            self.elastic.update_document(file_id, {"transcribed_text": transcribed_text})
             logger.info(f"the file {file_id} download, Transcribed successfully, and the text saved in elastic. ")
             # delete the temp file
             audio_path.unlink()

@@ -1,5 +1,4 @@
 from manager import UploadManager
-import config
 from configs import elastic_config, mongodb_config, kafka_config
 
 

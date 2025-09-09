@@ -2,7 +2,7 @@ from retrieval.manager import Manager
 import config
 
 if __name__ == "__main__":
-    # init instance of manager with source folder path and kafka env variables from config.py
+    # init instance of manager with source folder path and kafka env variables from configs.py
     manager = Manager(config.SOURCE_FOLDER_PATH,
                       config.KAFKA_SERVER_URI,
                       config.KAFKA_PRODUCER_TOPIC)

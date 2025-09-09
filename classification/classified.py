@@ -34,8 +34,3 @@ class Classified:
                     "is_bds": self.threshold_determination(risk_percent),
                     "bds_threat_level": self.danger_level(risk_percent)}
         return full_risk
-
-
-
-c = Classified(20, 2, 2)
-print(c.risk_percent_calculation())

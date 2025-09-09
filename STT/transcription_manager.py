@@ -11,7 +11,11 @@ class Transcriber:
     def __init__(self, DAL_mongodb: DALMongo, DAL_elastic: DALElastic):
         """ class Transcriber responsible on transcription of audio files which are stored on mongodb collection,
             and their metadata stored on elastic index.
-                in order for it to work it Is necessary get DAL for both of them - mongodb and elastic. """
+
+            in order for it to work it Is necessary get DAL for both of them - mongodb and elastic.
+
+            for start the work run the run_process method """
+
         if not isinstance(DAL_mongodb, DALMongo) or not isinstance(DAL_elastic, DALElastic):
             raise ValueError(f"one of the objects is not the correct type. current DAL_mongodb is {type(DAL_mongodb)}, "
                              f"and must to be DALMongo. current DAL_elastic is {type(DAL_elastic)}, "
@@ -23,7 +27,7 @@ class Transcriber:
 
 
     def start_connections(self):
-        # makes sure that both DAL connected, and ready for use
+        """ start the connections. in addition makes sure that both DAL connected, and ready for use. """
         connected_to_mongodb = self.mongodb.open_connection()
         connected_to_elastic = self.elastic.is_connected()
         return connected_to_mongodb and connected_to_elastic
@@ -49,7 +53,7 @@ class Transcriber:
                 process_work = self.transcriber_process(file_id)
                 if process_work:
                     num_successfully_transcribed += 1
-            logger.info(f"{num_successfully_transcribed} files have been transcribed and, "
+            logger.info(f"{num_successfully_transcribed} files have been transcribed, "
                         f"and were successfully added to elastic")
 
         else:
@@ -62,7 +66,7 @@ class Transcriber:
         """  download  file from mongodb-collection by file_id,
             saves the file temporarily in a folder \data, transcribes the file,
             send the transcribed text back to elastic-index. finally remove the temp file. """
-        temp_file_name = file_id
+        temp_file_name = "temp_file"
         try:
             self.mongodb.load_file(file_id, self.data_folder, temp_file_name)
             audio_path = self.data_folder.joinpath(temp_file_name)
@@ -82,5 +86,3 @@ class Transcriber:
         if not data_folder.exists():
             Path.mkdir(data_folder)
         return data_folder
-
-

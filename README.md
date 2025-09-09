@@ -37,3 +37,17 @@ folder with tools for kafka communication  (used in step1 and step2)
 - class **Consumer** for consume messages from kafka  
 
 
+### step 3 - STT  
+
+folder with STT tolls. and transcription process -  
+
+transcription process pulls out the files-id from elastic,  
+loads all file by his id from mongodb, transcriber him,  
+and save the text back in elastic.
+
+i chose to build the transcript as a separate process.  
+because it is a separate process from uploading the file itself.  
+and it will probably take a long time.  
+
+- file **speach_to_text** with method to convert STT  
+- file **transcription_manager** with **Transcriber** class for for management the process  

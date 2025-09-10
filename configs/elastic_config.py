@@ -2,7 +2,7 @@ import os
 
 
 # env variables for elasticsearch, initialized with current mongodb details
-ES_HOST_NAME = os.getenv("HOST_NAME", "localhost")
+ES_HOST_NAME = os.getenv("ES_HOST_NAME", "localhost")
 ES_INDEX = "muezzin"
 ES_MAPPINGS = {"properties":{
         "name": {"type": "keyword"},

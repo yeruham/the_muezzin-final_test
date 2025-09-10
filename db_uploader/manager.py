@@ -44,6 +44,11 @@ class UploadManager:
 
             if connected_to_elastic:
                 self.elastic.create_index()
+            else:
+                logger.error(f"the connection to elastic {self.elastic.host} not works")
+
+            if not connected_to_mongo_db:
+                logger.error(f"the connection to mongodb {self.mongodb.URI} not works")
 
             # loop on all received message - create unique id, send his to elastic, send the file by the path to mongodb
             for message in events:

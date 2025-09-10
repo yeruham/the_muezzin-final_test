@@ -23,7 +23,7 @@ uses be DAL-mongodb and sending to him the files themselves
 
 ### DAL  
 
-folder with dal dbs - mongodb, elastic  (used in step-2 and step-3)  
+folder with dal dbs - mongodb, elastic  (used in step-2, step-3, step4)  
 
 - class **DALElastic** for connection and operations be elasticsearch  
 - class **DALMongo** for connection and operations be mongodb   

@@ -1,4 +1,4 @@
-from retrieval.manager import Manager
+from manager import Manager
 import config
 
 if __name__ == "__main__":

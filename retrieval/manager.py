@@ -17,11 +17,12 @@ class Manager:
 
     def get_subfiles(self):
         """ return list with absolute paths of sub files from self.path """
-        if self.path.exists() and self.path.is_dir():
-            subfiles_paths = []
-            for sub in self.path.iterdir():
-                subfiles_paths.append(sub)
-            return subfiles_paths
+        # if self.path.exists() and self.path.is_dir():
+        subfiles_paths = []
+        for sub in self.path.iterdir():
+            subfiles_paths.append(sub)
+        return subfiles_paths
+
 
 
     def get_kafka_producer(self):

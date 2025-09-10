@@ -99,12 +99,13 @@ for all the services and mongodb, elastic, kafka - which are consumed for runnin
 ### environment variables  
 
 the project has many environment variables. most of them are in the **configs** folder.  
+initialized with default values ​​for local execution when mongodb, elastic, and kafka running in the background and listening to the usual ports.  
 
 - mongodb env:  
 MONGO_PREFIX  (default - 'mongodb')  
 MONGO_HOST  (default 'localhost')  
-MONGO_USER  (default None)   
-MONGO_PASSWORD  (default None)   
+MONGO_USER  (default None - not necessarily necessary)   
+MONGO_PASSWORD  (default None - not necessarily necessary)   
 MONGO_DB  (default 'muezzin')   
 MONGO_COLLECTION  (default 'podcast') 
 

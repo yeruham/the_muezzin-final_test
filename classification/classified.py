@@ -1,13 +1,11 @@
 class Classified:
 
 
-    def __init__(self, len_text, num_hostile_words, num_less_hostile_words):
-        """ gets the following details about text: its length, how many hostile words appear in it,
-            how many less hostile words appear in it.
-                responsible for giving a risk rating according to these details. """
+    def __init__(self, len_text, num_hostile_words):
+        """ gets the following details about text: its length, how many hostile words appear in it.
+            responsible for giving a risk rating according to these details. """
         self.len_text = len_text
-        # the value of hostile_words two of num_less_hostile_words
-        self.num_hostile_words = num_hostile_words + (num_less_hostile_words / 2)
+        self.num_hostile_words = num_hostile_words
         self.risk_percent = self.risk_percent_calculation()
 
 

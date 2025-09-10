@@ -73,6 +73,6 @@ and update her risk level back to elastic-index.
 - file **main** stores the hostile lists deciphering them and init the ClassifiedManager  
 
 
-- **note** : ClassifiedManager receives dict of lists hostile_words with kwy of level his risk and the final risk calculation will be divided by the level of risk.  
+- **note** : ClassifiedManager receives dict of lists hostile_words with kwy of level their risk and the final risk calculation will be divided by the level of risk.  
     This way he can get many lists at many risk levels.  
-    adaptation to the specific requirement of the project i booted it in the main with  {1: hostile_words , 2: lass_hostile_words}.  
+    adaptation to the specific requirement of the project i called him  in the main with  {1: hostile_words , 2: lass_hostile_words}.  

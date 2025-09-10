@@ -44,19 +44,20 @@ folder with:
 - STT tolls.  
 - service of transcription process -  
 
-transcription process pulls out the files-id from elastic,  
-loads all file by his id from mongodb, transcriber him,  
-and save the text back in elastic.
+    transcription process pulls out the files-id from elastic,  
+    loads all file by his id from mongodb, transcriber him,  
+    and save the text back in elastic.
 
-i chose to build the transcript as a separate process.  
-because it is a separate process from uploading the file itself and their metadata,
-and it will probably take a long time.  
+    i chose to build the transcript as a separate process.  
+    because it is a separate process from uploading the file itself and their metadata,
+    and it will probably take a long time.  
+
 
 - file **speach_to_text** with method to convert STT  
 - file **transcription_manager** with **Transcriber** class for for management the process  
 
 
-### step 4 - classified  
+### step 4 - classification  
 
 service which is responsible for classified risk level of texts which is stored in elastic-index.  
 retrieves all documents from elastic, classified them one by one - by words from hostile lists,  

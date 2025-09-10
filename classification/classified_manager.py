@@ -26,14 +26,17 @@ class ClassifiedManager:
                         f"start the classified process.")
             documents = self.dal_elastic.get_documents()
             logger.info(f"classified get {len(documents)} documents from elastic")
+            num_texts_classified = 0
             for document in documents:
                 try:
                     doc_id = document["_id"]
                     full_risk = self.classified_document(document)
                     print(f"doc_id: {doc_id} full_risk: {full_risk}")
                     self.dal_elastic.update_document(doc_id, full_risk)
+                    num_texts_classified += 1
                 except Exception as e:
                     logger.error(f"Error during try to classified the {document} document: {e}")
+            logger.info(f"classified finished {num_texts_classified} texts classified")
         else:
             logger.info(f"Error: classified can't work, because of there is no connection to elastic: {self.dal_elastic.host}.")
 

@@ -10,28 +10,28 @@ class Classified:
 
 
     def risk_percent_calculation(self):
-        """ calculates risk percent - the formula: num of hostile_words divide by one-fifth the length of the text,
+        """ calculates risk percent - the formula: num of hostile_words divide by tenth the length of the text,
             ranges from zero to one max """
-        risk_percent = self.num_hostile_words / (self.len_text / 5)
+        risk_percent = self.num_hostile_words / (self.len_text / 10)
         if risk_percent > 1:
             risk_percent = 1.0
         return risk_percent
 
 
     def threshold_determination(self):
-        """ threshold determination of incrimination - the formula: risk_percent greater than 0.5. """
-        if self.risk_percent > 0.5:
+        """ threshold determination of incrimination - the formula: risk_percent greater than 0.1 """
+        if self.risk_percent > 0.1:
             return True
         else:
             return False
 
 
     def danger_level(self):
-        """ calculates danger level - the formula: "high" for 1 risk_percent,
-            "medium" if risk_percent greater than 0.5, greater than "none" . """
-        if self.risk_percent >= 1.0:
+        """ calculates danger level - the formula: "high" if risk_percent greater than 0.75 risk_percent,
+            "medium" if risk_percent greater than 0.1, greater than "none" . """
+        if self.risk_percent > 0.75:
             return "high"
-        elif self.risk_percent > 0.5:
+        elif self.risk_percent > 0.1:
             return "medium"
         else:
             return "none"

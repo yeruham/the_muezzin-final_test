@@ -1,5 +1,7 @@
 # the muezzin project
 
+---
+
 ### step 1 - retrieval
 
 service which is responsible for retrieving metadat of files
@@ -8,6 +10,7 @@ and send all one to kafka.
 - class **FileMetadata**  for easy access metadata-file  
 - class **Manager** for manage the process  
 
+---
 
 ### step 2 - db_uploader  
 
@@ -36,6 +39,7 @@ folder with tools for kafka communication  (used in step-1 and step-2)
 - class **Producer** for produce messages to kafka
 - class **Consumer** for consume messages from kafka  
 
+---
 
 ### step 3 - STT  
 
@@ -56,6 +60,7 @@ folder with:
 - file **speach_to_text** with method to convert STT  
 - file **transcription_manager** with **Transcriber** class for for management the process  
 
+---
 
 ### step 4 - classification  
 
@@ -66,9 +71,9 @@ and update her risk level back to elastic-index.
 - file **text_analysis** with auxiliary functions which locate how many times a word or sentence appears in the text.  
 - class **Classified** responsible for risk calculation method. accepts only two numeric data - 1: length text, 2: num hostile words which were found in the text.  
   calculate three things:  
-  - **risk percent** - the formula: num of hostile_words divide by one-fifth the length of the text, ranges from zero to one max  
-  - **threshold determination** - the formula: risk_percent greater than 0.5.  
-  - **danger level** - the formula: "high" for 1 risk_percent, "medium" if risk_percent greater than 0.5, greater than "none" .  
+  - **risk percent** - the formula: num of hostile_words divide by tenth the length of the text, ranges from zero to one max  
+  - **threshold determination** - the formula: risk_percent greater than 0.1.  
+  - **danger level** - the formula: "high" if risk_percent greater than 0.75, "medium" if risk_percent greater than 0.1, less "none" .  
 
 - class **ClassifiedManager** to manage the process, retrieves, classified, updates the elastic.  
 - file **main** stores the hostile lists deciphering them and init the ClassifiedManager  
@@ -79,5 +84,50 @@ and update her risk level back to elastic-index.
   This way he can get many lists at many risk levels.   
   adaptation to the specific requirement of the project i called him  in the main with  {1: hostile_words , 2: lass_hostile_words}.  
   - i chose to perform the risk calculations based on the percentage of dangerous words in the text, regardless of other texts.  
-  it is possible to change all calculations functions in classified class only, and all the code will run as is  .
-    
+  it is possible to change all calculations functions in classified class only, and all the code will run as is.  
+
+---
+
+### step 5 - docker  
+
+- i added to all the four services **requirements.txt** that contain their needs and **Dockerfile** customized  
+- in addition there is a file **docker_commends.bat** that contain all the required Docker commands 
+for all the services and mongodb, elastic, kafka - which are consumed for running. all under one network.
+
+---
+
+### environment variables  
+
+the project has many environment variables. most of them are in the **configs** folder.  
+
+- mongodb env:  
+MONGO_PREFIX  (default - 'mongodb')  
+MONGO_HOST  (default 'localhost')  
+MONGO_USER  (default None)   
+MONGO_PASSWORD  (default None)   
+MONGO_DB  (default 'muezzin')   
+MONGO_COLLECTION  (default 'podcast') 
+
+
+- elasticsearch env  
+ES_HOST_NAME  (default 'localhost')   
+ES_INDEX  (default 'muezzin')   
+ES_MAPPINGS  (there is a default value bat the variable itself is not necessary)   
+
+
+- kafka env  
+KAFKA_SERVER_URI  (default 'localhost:9092')   
+KAFKA_PRODUCER_TOPIC  (default 'podcast_metadata')  
+KAFKA_CONSUMER_GROUP  (default 'muezzin-group')  
+
+
+- logger env  
+LOGGER_NAME  (default 'logger-muezzin')  
+LOGGER_ES_HOST  (default 'http://localhost:9200')  
+LOGGER_ES_INDEX  (default 'logging-muezzin')
+
+
+- retrieval env   
+SOURCE_FOLDER_PATH  (default 'C:\\python_data\\podcasts')  
+The folder from which the files will be pulled and the process will be carried out on them  
+for running in a docker is necessary define --mount with src={SOURCE_FOLDER_PATH} and dst=app/data      
